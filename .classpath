@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="dist/GCES Scheduler.jar"/>
+	<classpathentry kind="lib" path="dist/run1426258566/GCES Scheduler.jar"/>
+	<classpathentry kind="lib" path="dist/run1450676145/GCES Scheduler.jar"/>
+	<classpathentry kind="lib" path="dist/run1590442749/GCES Scheduler.jar"/>
+	<classpathentry kind="lib" path="dist/run1591906466/GCES Scheduler.jar"/>
+	<classpathentry kind="lib" path="dist/run1804372557/GCES Scheduler.jar"/>
+	<classpathentry kind="lib" path="dist/run1830862713/GCES Scheduler.jar"/>
+	<classpathentry kind="lib" path="dist/run278003162/GCES Scheduler.jar"/>
+	<classpathentry kind="lib" path="dist/run664568070/GCES Scheduler.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>
