@@ -43,14 +43,7 @@ public class TeacherDialogFXMLController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        
-    }    
-
-    @FXML
-    private void teacherDone(ActionEvent event) {
-        String tName = this.tName.getCharacters().toString();
-        Boolean ttype = this.tType.isSelected();
-         ObservableList tTime =  FXCollections.observableArrayList(
+        ObservableList tTime =  FXCollections.observableArrayList(
                  "6:00",
                  "6:30",
                  "7:00",
@@ -64,6 +57,13 @@ public class TeacherDialogFXMLController implements Initializable {
             );
         tSTime.setItems(tTime);
         tETime.setItems(tTime);
+    }    
+
+    @FXML
+    private void teacherDone(ActionEvent event) {
+        String tName = this.tName.getCharacters().toString();
+        Boolean ttype = this.tType.isSelected();
+        
         System.out.println(tName);
         System.out.println(ttype);
     }

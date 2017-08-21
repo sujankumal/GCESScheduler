@@ -65,8 +65,8 @@ public final class DatabaseHandleSQLite {
                 +   "	ID INTEGER not null primary key,\n" 
                 +   "	NAME VARCHAR(30) not null,\n"
                 +   "	FULLTIME BOOLEAN,\n"
-                +   "	TSTART INTEGER,\n"
-                +   "	TEND INTEGER,\n"
+                +   "	TSTART VARCHAR(10),\n"
+                +   "	TEND VARCHAR(10),\n"
                 +   "	SUBJECT VARCHAR(40)\n"
                 +   ")";
                 pstmt = conn.prepareStatement(qry);
