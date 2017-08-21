@@ -6,28 +6,23 @@
 package gces.scheduler;
 
 
+import gces.scheduler.database.DatabaseHandleSQLite;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -59,15 +54,21 @@ public class FXMLDocumentController implements Initializable {
     private MenuItem menuClose;
     @FXML
     private MenuItem addSubject;
+    @FXML
+    private Menu schedule;
     
     private void handleButtonAction(ActionEvent event) {
         System.out.println("You clicked me!");
         label.setText("Hello World!");
     }
-    
+   
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+      
+       DatabaseHandleSQLite dbsqlite = new DatabaseHandleSQLite("initialize table"); 
+       System.out.println(dbsqlite.toString());
+       dbsqlite.disconnect();
     }    
     private StackPane stackpane;
 
@@ -82,9 +83,9 @@ public class FXMLDocumentController implements Initializable {
         */
        final Stage dialog = new Stage();
        dialog.setTitle("teacher dialog");
-       Parent root = FXMLLoader.load(getClass().getResource("teacherDialogFXML.fxml"));
+       Parent root = FXMLLoader.load(getClass().getResource("gui/teacherDialogFXML.fxml"));
        Scene dialogScene = new Scene(root, 500, 400);
-       dialogScene.getStylesheets().add(getClass().getResource("teacherdialogfxml.css").toExternalForm());
+       dialogScene.getStylesheets().add(getClass().getResource("cascadeSS/teacherdialogfxml.css").toExternalForm());
        dialog.setScene(dialogScene);
        dialog.show();
         
@@ -95,9 +96,9 @@ public class FXMLDocumentController implements Initializable {
        
        final Stage dialog = new Stage();
        dialog.setTitle("class dialog");
-       Parent root = FXMLLoader.load(getClass().getResource("ClassDialogFXML.fxml"));
+       Parent root = FXMLLoader.load(getClass().getResource("gui/ClassDialogFXML.fxml"));
        Scene dialogScene = new Scene(root, 500, 400);
-       dialogScene.getStylesheets().add(getClass().getResource("classdialogfxml.css").toExternalForm());
+       dialogScene.getStylesheets().add(getClass().getResource("cascadeSS/classdialogfxml.css").toExternalForm());
        dialog.setScene(dialogScene);
        dialog.show();
     }
@@ -109,12 +110,18 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void addSubject(ActionEvent event) throws IOException {
+        
        final Stage dialog = new Stage();
        dialog.setTitle("Subject dialog");
-       Parent root = FXMLLoader.load(getClass().getResource("subjectDialogFXML.fxml"));
+       Parent root = FXMLLoader.load(getClass().getResource("gui/subjectDialogFXML.fxml"));
        Scene dialogScene = new Scene(root, 500, 400);
-       dialogScene.getStylesheets().add(getClass().getResource("subjectdialogfxml.css").toExternalForm());
+       dialogScene.getStylesheets().add(getClass().getResource("cascadeSS/subjectdialogfxml.css").toExternalForm());
        dialog.setScene(dialogScene);
        dialog.show();
+    }
+
+    @FXML
+    private void generate(ActionEvent event) throws IOException {
+        
     }
 }

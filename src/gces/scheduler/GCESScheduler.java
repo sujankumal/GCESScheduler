@@ -13,15 +13,16 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author नमस्ते
+ * @author à¤¨à¤®à¤¸à¥�à¤¤à¥‡
  */
 public class GCESScheduler extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("gui/FXMLDocument.fxml"));
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("GCESStyle.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("cascadeSS/GCESStyle.css").toExternalForm());
+        stage.setTitle("GCES Scheduler");
         stage.setScene(scene);
         stage.show();
     }
@@ -33,4 +34,4 @@ public class GCESScheduler extends Application {
         launch(args);
     }
     
-}
+}//College.Sujan.98468
