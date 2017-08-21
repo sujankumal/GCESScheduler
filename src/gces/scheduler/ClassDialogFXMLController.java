@@ -61,8 +61,18 @@ public class ClassDialogFXMLController implements Initializable {
 
     @FXML
     private void classDone(ActionEvent event) {
-        String semester = semesterCBox.getSelectionModel().getSelectedItem().toString();
-        String periodn = semPeriod.getSelectionModel().getSelectedItem().toString();
+        String semester="";
+        String periodn="";
+        try {
+            semester = semesterCBox.getSelectionModel().getSelectedItem().toString();
+        } catch (NullPointerException e) {
+            System.out.println("Null pointer Exception");
+        }
+        try {
+            periodn = semPeriod.getSelectionModel().getSelectedItem().toString();
+        } catch (NullPointerException e) {
+            System.out.println("Null pointer Exception");
+        }
         DatabaseHandleSQLite dh = new DatabaseHandleSQLite();
         Connection conn = dh.connect();
         //database entry  here
