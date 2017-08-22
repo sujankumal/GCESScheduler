@@ -5,8 +5,15 @@
  */
 package gces.scheduler;
 
+import gces.scheduler.database.DatabaseHandleSQLite;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -57,15 +64,66 @@ public class TeacherDialogFXMLController implements Initializable {
             );
         tSTime.setItems(tTime);
         tETime.setItems(tTime);
+        
+        DatabaseHandleSQLite dh = new DatabaseHandleSQLite();
+        Connection conn = dh.connect();
+        //database entry  here
+        PreparedStatement pstmt = null;
+        String qry = "SELECT `NAME` FROM `subjects`;";
+        ObservableList dataT =  FXCollections.observableArrayList();
+        ResultSet rs =null;
+        try {
+            pstmt = conn.prepareStatement(qry);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                dataT.add(rs.getString("NAME"));
+                tSubject.setItems(dataT);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ClassDialogFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        dh.disconnect();
+        
     }    
 
     @FXML
     private void teacherDone(ActionEvent event) {
         String tName = this.tName.getCharacters().toString();
         Boolean ttype = this.tType.isSelected();
-        
-        System.out.println(tName);
-        System.out.println(ttype);
+        String tSubjectString ="";
+        String tendTimeString ="";
+        String tStartTimeString="";
+        try {
+        tendTimeString = tETime.getSelectionModel().getSelectedItem().toString();
+        } catch (NullPointerException e) {
+            System.out.println("null pointer");
+        }
+        try {
+        tStartTimeString =tSTime.getSelectionModel().getSelectedItem().toString();
+        } catch (NullPointerException e) {
+            System.out.println("null pointer");
+        }
+        try {
+            tSubjectString = tSubject.getSelectionModel().getSelectedItem().toString();
+        } catch (NullPointerException e) {
+            System.out.println("Null Pointer");
+        }
+        try {
+            DatabaseHandleSQLite dh = new DatabaseHandleSQLite();
+            Connection conn = dh.connect();
+            //database entry  here
+            PreparedStatement pstmt = null;
+            String qry = "INSERT INTO `teachers`(`NAME`, `FULLTIME`, `TSTART`, `TEND`, `SUBJECT`)"
+                    + " VALUES('"+tName+"', '"+ttype+"', '"+tStartTimeString+"', '"+tendTimeString+"', '"+tSubjectString+"');";
+            pstmt = conn.prepareStatement(qry);
+            pstmt.executeUpdate();
+            dh.disconnect();
+            this.tName.clear();
+            tSubject.setValue(null);
+            tETime.setValue(null);
+            tSTime.setValue(null);
+        } catch (SQLException e) {
+        }
     }
     
 }
