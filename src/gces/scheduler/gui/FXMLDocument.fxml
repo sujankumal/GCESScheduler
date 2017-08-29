@@ -54,6 +54,9 @@
                     </menus>
                   </MenuBar>
                </top>
+               <center>
+                  <StackPane fx:id="stackpane" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+               </center>
             </BorderPane>
          </children>
       </StackPane>

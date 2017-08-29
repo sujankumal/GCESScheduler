@@ -20,9 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -64,12 +62,12 @@ public class FXMLDocumentController implements Initializable {
    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-      
+        
        DatabaseHandleSQLite dbsqlite = new DatabaseHandleSQLite("initialize table"); 
        System.out.println(dbsqlite.toString());
        dbsqlite.disconnect();
     }    
+    @FXML
     private StackPane stackpane;
 
     @FXML
@@ -122,6 +120,7 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void generate(ActionEvent event) throws IOException {
-        
+        MainScheduleTaskFrame schedule = new MainScheduleTaskFrame();
+        stackpane.getChildren().add(schedule.initialize());
     }
 }
