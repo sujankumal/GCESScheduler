@@ -13,26 +13,41 @@ import org.controlsfx.control.spreadsheet.GridBase;
 import org.controlsfx.control.spreadsheet.SpreadsheetCell;
 import org.controlsfx.control.spreadsheet.SpreadsheetCellType;
 import org.controlsfx.control.spreadsheet.SpreadsheetView;
-
+import gces.scheduler.database.DatabaseHandleSQLite;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author नमस्ते
  */
 public class MainScheduleTaskFrame {
     
-    public SpreadsheetView initialize(){
-        GridBase gridBase = new GridBase(25, 8);
-        List < ObservableList< SpreadsheetCell>> rows = new ArrayList <>();
-        
+        static SpreadsheetView spreadView;
+        static GridBase gridBase;
+        static List < ObservableList< SpreadsheetCell>> rows;
+        private List<String> teachers, classes, subjects;
+
+    public MainScheduleTaskFrame() {
+            try {
+                dataInitialize();
+            } catch (SQLException ex) {
+                Logger.getLogger(MainScheduleTaskFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        gridBase = new GridBase(25, 8);
+        rows = new ArrayList <>();
         for (int row = 0 ; row < gridBase .getRowCount(); ++ row ) {
             ObservableList< SpreadsheetCell>rowOfCells = FXCollections.observableArrayList ();
             for(int column = 0; column< gridBase.getColumnCount (); ++ column ) {
-                rowOfCells.add(SpreadsheetCellType.STRING.createCell(row, column, 1, 1, "empty "));
+                rowOfCells.add(SpreadsheetCellType.STRING.createCell(row, column, 1, 1, ""));
             }
         rows.add ( rowOfCells );
         }
         
-        gridBase .setRows (rows);
+        gridBase.setRows (rows);
         gridBase.spanColumn(2, 0, 0);
         gridBase.spanRow(6, 1, 0);
         gridBase.spanRow(6, 7, 0);
@@ -67,10 +82,51 @@ public class MainScheduleTaskFrame {
            gridBase.setCellValue((j+5), 1, "5th period");
            gridBase.setCellValue((j+6), 1, "6th period");            
         }
-        SpreadsheetView spreadView = new SpreadsheetView( gridBase );
+        spreadView = new SpreadsheetView( gridBase );
         spreadView.setShowRowHeader(true);
         spreadView.setShowColumnHeader(true);
         spreadView.setEditable (true);
-        return spreadView;
     }
+    
+    public void dataInitialize() throws SQLException{
+        DatabaseHandleSQLite databaseHandleSQLite = new DatabaseHandleSQLite();
+        Connection conn = databaseHandleSQLite.connect();
+        ResultSet rs=null;
+        PreparedStatement pStmt = null;
+        String qry = "SELECT `NAME` FROM `teachers`"; 
+        pStmt = conn.prepareStatement(qry);
+        rs = pStmt.executeQuery();
+        teachers = new ArrayList<String>();
+        while (rs.next()) {
+            teachers.add(rs.getString("NAME"));
+        }
+       
+        qry = "SELECT `NAME` FROM `subjects`";
+        pStmt = conn.prepareStatement(qry);
+        rs = pStmt.executeQuery();
+        subjects = new ArrayList<String>();
+        while (rs.next()) {
+            subjects.add(rs.getString("NAME"));
+        }
+        
+        qry = "SELECT `SEMESTER` FROM `class`";
+        pStmt = conn.prepareStatement(qry);
+        rs = pStmt.executeQuery();
+        classes = new ArrayList<String>();
+        while (rs.next()) {
+            classes.add(rs.getString("SEMESTER"));
+        }
+        
+        System.out.println(teachers.get(0));    
+        System.out.println(subjects.get(0));
+        System.out.println(classes.get(0));
+        
+        databaseHandleSQLite.disconnect();
+    }
+    
+    public SpreadsheetView generate(){
+          gridBase.setCellValue(5, 5, "hero");
+          return spreadView;
+    }   
+    
 }

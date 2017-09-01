@@ -121,6 +121,8 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void generate(ActionEvent event) throws IOException {
         MainScheduleTaskFrame schedule = new MainScheduleTaskFrame();
-        stackpane.getChildren().add(schedule.initialize());
+        
+        stackpane.getChildren().add(schedule.generate());
+    
     }
 }
