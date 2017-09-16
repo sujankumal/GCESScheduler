@@ -8,20 +8,30 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gces.scheduler.TeacherDialogFXMLController">
+<AnchorPane id="AnchorPane" prefHeight="449.0" prefWidth="531.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gces.scheduler.TeacherDialogFXMLController">
     <stylesheets>
         <URL value="@teacherdialogfxml.css" />
     </stylesheets>
    <children>
       <Label layoutX="45.0" layoutY="71.0" prefHeight="37.0" prefWidth="84.0" text="Teacher Name" />
-      <Label layoutX="50.0" layoutY="255.0" prefHeight="37.0" prefWidth="84.0" text="Teachers Time" />
-      <Label layoutX="45.0" layoutY="194.0" prefHeight="37.0" prefWidth="93.0" text="Teachers Subject" />
-      <Label layoutX="50.0" layoutY="121.0" prefHeight="37.0" prefWidth="84.0" text="Type" />
-      <TextField fx:id="tName" layoutX="184.0" layoutY="77.0" prefHeight="25.0" prefWidth="312.0" />
-      <ComboBox fx:id="tSTime" layoutX="190.0" layoutY="261.0" prefWidth="150.0" />
-      <ComboBox fx:id="tETime" layoutX="346.0" layoutY="261.0" prefWidth="150.0" />
+      <Label layoutX="41.0" layoutY="219.0" prefHeight="37.0" prefWidth="109.0" text="Teacher's Subject" />
+      <Label layoutX="46.0" layoutY="130.0" prefHeight="37.0" prefWidth="84.0" text="Type" />
+      <TextField fx:id="tName" layoutX="184.0" layoutY="77.0" prefHeight="25.0" prefWidth="253.0" />
       <ComboBox fx:id="tSubject" layoutX="190.0" layoutY="200.0" prefWidth="150.0" />
-      <CheckBox fx:id="tType" layoutX="229.0" layoutY="131.0" mnemonicParsing="false" text="Full Time" />
-      <Button fx:id="teacherDone" layoutX="188.0" layoutY="311.0" mnemonicParsing="false" onAction="#teacherDone" prefHeight="25.0" prefWidth="150.0" text="Done" />
+      <CheckBox fx:id="tType" layoutX="231.0" layoutY="140.0" mnemonicParsing="false" text="Full Time" />
+      <Button fx:id="teacherDone" layoutX="45.0" layoutY="348.0" mnemonicParsing="false" onAction="#teacherDone" prefHeight="25.0" prefWidth="117.0" text="Done" />
+      <ComboBox fx:id="tSubject1" layoutX="190.0" layoutY="225.0" prefHeight="25.0" prefWidth="150.0" />
+      <ComboBox fx:id="tSubject2" layoutX="190.0" layoutY="250.0" prefHeight="25.0" prefWidth="150.0" />
+      <Label layoutX="53.0" layoutY="305.0" prefHeight="37.0" prefWidth="117.0" text="Teachers periods" />
+      <ComboBox fx:id="teacherPeriod1" layoutX="194.0" layoutY="311.0" prefHeight="25.0" prefWidth="75.0" />
+      <ComboBox fx:id="teacherPeriod11" layoutX="280.0" layoutY="311.0" prefHeight="25.0" prefWidth="75.0" />
+      <ComboBox fx:id="teacherPeriod12" layoutX="362.0" layoutY="311.0" prefHeight="25.0" prefWidth="75.0" />
+      <Label layoutX="148.0" layoutY="204.0" text="1" />
+      <Label layoutX="148.0" layoutY="229.0" text="2" />
+      <Label layoutX="148.0" layoutY="254.0" text="3" />
+      <CheckBox fx:id="tSubLab1" layoutX="401.0" layoutY="204.0" mnemonicParsing="false" text="Lab" />
+      <CheckBox fx:id="tSubLab2" layoutX="401.0" layoutY="229.0" mnemonicParsing="false" text="lab" />
+      <CheckBox fx:id="tSubLab3" layoutX="401.0" layoutY="254.0" mnemonicParsing="false" text="lab" />
+      <Label layoutX="184.0" layoutY="342.0" prefHeight="37.0" prefWidth="253.0" text="Note: Period required only for part time teacher" />
    </children>
 </AnchorPane>

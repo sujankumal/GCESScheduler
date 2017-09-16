@@ -18,25 +18,39 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Iterator;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import org.controlsfx.control.GridView;
+
 /**
  *
  * @author नमस्ते
  */
 public class MainScheduleTaskFrame {
     
-        static SpreadsheetView spreadView;
-        static GridBase gridBase;
-        static List < ObservableList< SpreadsheetCell>> rows;
-        private List<String> teachers, classes, subjects;
-
-    public MainScheduleTaskFrame() {
-            try {
-                dataInitialize();
-            } catch (SQLException ex) {
-                Logger.getLogger(MainScheduleTaskFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        SpreadsheetView spreadView;
+        GridView<Object> gridView;
+        GridBase gridBase;
+        GridPane gridPane = new GridPane();
+        List < ObservableList< SpreadsheetCell>> rows;
+        StackPane stackPane;
+        DatabaseHandleSQLite dh = new DatabaseHandleSQLite();
+        Connection conn = dh.connect();
+        PreparedStatement pstmt = null;
+        String localString;
+        String qry; 
+        ResultSet rs =null;
+        List<Object> teachers = new ArrayList<Object>();
+        TeacherData td;
+        //
+    /**
+     *
+     * @param stackPane
+     */
+    public MainScheduleTaskFrame(StackPane stackPane) {
+         
+        this.stackPane = stackPane;
         gridBase = new GridBase(25, 8);
         rows = new ArrayList <>();
         for (int row = 0 ; row < gridBase .getRowCount(); ++ row ) {
@@ -86,47 +100,91 @@ public class MainScheduleTaskFrame {
         spreadView.setShowRowHeader(true);
         spreadView.setShowColumnHeader(true);
         spreadView.setEditable (true);
+            
     }
     
     public void dataInitialize() throws SQLException{
-        DatabaseHandleSQLite databaseHandleSQLite = new DatabaseHandleSQLite();
-        Connection conn = databaseHandleSQLite.connect();
-        ResultSet rs=null;
-        PreparedStatement pStmt = null;
-        String qry = "SELECT `NAME` FROM `teachers`"; 
-        pStmt = conn.prepareStatement(qry);
-        rs = pStmt.executeQuery();
-        teachers = new ArrayList<String>();
+        qry = "SELECT * FROM `teachers`"; 
+        pstmt = conn.prepareStatement(qry);
+        rs = pstmt.executeQuery();
         while (rs.next()) {
-            teachers.add(rs.getString("NAME"));
+            String teacherName = "";
+            Boolean type = false;
+            
+            String subject1 = "";
+            String subject2 = "";
+            String subject3 = "";
+            
+            Integer period1 = 0;
+            Integer period2 = 0;
+            Integer period3 = 0;
+            
+            Boolean lab1 = false;
+            Boolean lab2 = false;
+            Boolean lab3 = false;
+            
+            List<String> subjects;
+            List<Integer> periods;
+            List<Boolean> labs;
+            
+            subjects = new ArrayList<>();
+            periods = new ArrayList<>();
+            labs = new ArrayList<>();
+            
+            teacherName = rs.getString("NAME");
+            type = rs.getBoolean("FULLTIME");
+            
+            
+            subject1 = rs.getString("FIRSTSUBJECT");
+            subject2 = rs.getString("SECONDSUBJECT");
+            subject3 = rs.getString("THIRDSUBJECT");
+            period1 = rs.getInt("FIRSTPERIOD");
+            period2 = rs.getInt("SECONDPERIOD");
+            period3 = rs.getInt("THIRDPERIOD");
+            lab1 = rs.getBoolean("FIRSTSUBLAB");
+            lab2 = rs.getBoolean("SECONDSUBLAB");
+            lab3 = rs.getBoolean("THIRDSUBLAB");
+            
+            
+            subjects.add(subject1);
+            subjects.add(subject2);
+            subjects.add(subject3);
+            
+            periods.add(period1);
+            periods.add(period2);
+            periods.add(period3);
+            
+            labs.add(lab1);
+            labs.add(lab2);
+            labs.add(lab3);
+            
+            td = new TeacherData(teacherName, type, subjects, periods, labs);
+            teachers.add(td);
         }
-       
-        qry = "SELECT `NAME` FROM `subjects`";
-        pStmt = conn.prepareStatement(qry);
-        rs = pStmt.executeQuery();
-        subjects = new ArrayList<String>();
-        while (rs.next()) {
-            subjects.add(rs.getString("NAME"));
-        }
-        
-        qry = "SELECT `SEMESTER` FROM `class`";
-        pStmt = conn.prepareStatement(qry);
-        rs = pStmt.executeQuery();
-        classes = new ArrayList<String>();
-        while (rs.next()) {
-            classes.add(rs.getString("SEMESTER"));
-        }
-        
-        System.out.println(teachers.get(0));    
-        System.out.println(subjects.get(0));
-        System.out.println(classes.get(0));
-        
-        databaseHandleSQLite.disconnect();
     }
     
-    public SpreadsheetView generate(){
+    public SpreadsheetView generate() throws SQLException{
           gridBase.setCellValue(5, 5, "hero");
-          return spreadView;
-    }   
-    
+          dataInitialize();
+          System.out.println(teachers.size()); 
+          
+           //main scheduling here :D
+          
+          for (Iterator<Object> iterator = teachers.iterator(); iterator.hasNext();) {
+              TeacherData next = (TeacherData) iterator.next();
+              System.out.println(next.getName());
+              System.out.println(next.getType());
+              System.out.println(next.getLabs().get(1));
+              System.out.println(next.getPeriods().get(1));
+              System.out.println(next.getSubjects().get(0));
+            }
+          
+
+            //between here
+          stackPane.getChildren().add(spreadView);
+          dh.disconnect();
+         return spreadView;
+    }  
 }
+
+//CP problem take variaable, domain, and constrain

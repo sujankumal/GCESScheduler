@@ -24,8 +24,9 @@ public final class DatabaseHandleSQLite {
     public DatabaseHandleSQLite(String s){
         connect();
         setUpTeachersTable();
-        setUpClassTable();
-        setUpSubjectTable();
+        //deleted :D
+      //  setUpClassTable();
+      //  setUpSubjectTable();
     }
     public DatabaseHandleSQLite(){  
         
@@ -61,69 +62,26 @@ public final class DatabaseHandleSQLite {
             if (tables.next()) {
                 System.out.println("Table"+TABLE_NAME+" already exists.Ready to go !");
             }else{
-                String qry = "CREATE TABLE " +TABLE_NAME+ "("
-                +   "	ID INTEGER not null primary key,\n" 
-                +   "	NAME VARCHAR(30) not null,\n"
-                +   "	FULLTIME BOOLEAN,\n"
-                +   "	TSTART VARCHAR(10),\n"
-                +   "	TEND VARCHAR(10),\n"
-                +   "	SUBJECT VARCHAR(40)\n"
-                +   ")";
+                
+                String qry = "CREATE TABLE "+TABLE_NAME+ "("
+                        +"ID INTEGER not null primary key,\n" 
+                        +"NAME VARCHAR(30) not null,\n" 
+                        +"FULLTIME BOOLEAN,\n" 
+                        +"FIRSTSUBJECT VARCHAR(30),\n" 
+                        +"SECONDSUBJECT VARCHAR(30),\n" 
+                        +"THIRDSUBJECT VARCHAR(30),\n" 
+                        +"FIRSTPERIOD INTEGER,\n" 
+                        +"SECONDPERIOD INTEGER,\n" 
+                        +"THIRDPERIOD INTEGER,\n"
+                        +"FIRSTSUBLAB BOOLEAN,\n" 
+                        +"SECONDSUBLAB BOOLEAN,\n" 
+                        +"THIRDSUBLAB BOOLEAN"
+                        + ")";
                 pstmt = conn.prepareStatement(qry);
                 pstmt.executeUpdate();
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage()+"...setUpDatabaseTableTeacher");
         }
-    }
-    void setUpClassTable(){
-         String TABLE_NAME = "class";
-        try {
-           //stmt = conn.prepareStatement();
-            
-            DatabaseMetaData dbm = conn.getMetaData();
-            ResultSet tables = dbm.getTables(null, null, TABLE_NAME.toUpperCase(), null);
-            
-            if (tables.next()) {
-                System.out.println("Table "+TABLE_NAME+" already exists. Ready to go!");
-            }else{
-                
-               String qry="CREATE TABLE " +TABLE_NAME+ "("
-                        +   "	ID INTEGER not null primary key,\n" 
-                        +   "	SEMESTER VARCHAR(20) UNIQUE,\n"
-                        +   "	PERIODNO INTEGER not null\n"
-                        +   ")";
-                pstmt = conn.prepareStatement(qry);
-                pstmt.executeUpdate();
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage()+"....setUpDatabaseTableClass");
-        }
-    }
-    void setUpSubjectTable(){
-        String TABLE_NAME = "subjects";
-        try {
-           // stmt = conn.createStatement();
-            DatabaseMetaData dbm = conn.getMetaData();
-            ResultSet tables =dbm.getTables(null, null, TABLE_NAME.toUpperCase(), null);
-            
-            if (tables.next()) {
-                System.out.println("Table"+TABLE_NAME+" already exists.Ready to go !");
-            }else{
-                String qry = "CREATE TABLE "+TABLE_NAME+"("
-                +   "	ID INTEGER not null primary key,\n"
-                +   "	NAME VARCHAR(40) not null,\n"
-                +   "	TEACHER VARCHAR(30),\n"
-                +   "	ISLABREQ BOOLEAN,\n"
-                +   "	CLASS INTEGER\n"
-                +   ")";
-                
-                pstmt = conn.prepareStatement(qry);
-                pstmt.executeUpdate();
-            } 
-        } catch (SQLException e) {
-            System.err.println(e.getMessage()+"...setUpDatabaseTableSubjects");
-        }
-    }
-    
+    } 
 }

@@ -9,6 +9,7 @@ package gces.scheduler;
 import gces.scheduler.database.DatabaseHandleSQLite;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -37,12 +38,6 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private MenuItem teacherAdd;
     @FXML
-    private Menu classes;
-    @FXML
-    private Menu subjects;
-    @FXML
-    private MenuItem addClass;
-    @FXML
     private StackPane stackPane;
     @FXML
     private BorderPane borderPane;
@@ -50,8 +45,6 @@ public class FXMLDocumentController implements Initializable {
     private MenuBar menuBar;
     @FXML
     private MenuItem menuClose;
-    @FXML
-    private MenuItem addSubject;
     @FXML
     private Menu schedule;
     
@@ -89,40 +82,20 @@ public class FXMLDocumentController implements Initializable {
         
     }
 
-    @FXML
-    private void addClass(ActionEvent event) throws IOException {
-       
-       final Stage dialog = new Stage();
-       dialog.setTitle("class dialog");
-       Parent root = FXMLLoader.load(getClass().getResource("gui/ClassDialogFXML.fxml"));
-       Scene dialogScene = new Scene(root, 500, 400);
-       dialogScene.getStylesheets().add(getClass().getResource("cascadeSS/classdialogfxml.css").toExternalForm());
-       dialog.setScene(dialogScene);
-       dialog.show();
-    }
+    
 
     @FXML
     private void menuClose(ActionEvent event) {
         System.exit(0);
     } 
 
-    @FXML
-    private void addSubject(ActionEvent event) throws IOException {
-        
-       final Stage dialog = new Stage();
-       dialog.setTitle("Subject dialog");
-       Parent root = FXMLLoader.load(getClass().getResource("gui/subjectDialogFXML.fxml"));
-       Scene dialogScene = new Scene(root, 500, 400);
-       dialogScene.getStylesheets().add(getClass().getResource("cascadeSS/subjectdialogfxml.css").toExternalForm());
-       dialog.setScene(dialogScene);
-       dialog.show();
-    }
+    
 
     @FXML
-    private void generate(ActionEvent event) throws IOException {
-        MainScheduleTaskFrame schedule = new MainScheduleTaskFrame();
-        
-        stackpane.getChildren().add(schedule.generate());
+    private void generate(ActionEvent event) throws IOException, SQLException {
+        MainScheduleTaskFrame schedule = new MainScheduleTaskFrame(stackpane);
+        schedule.generate();//remove this and uncomment below
+        //stackpane.getChildren().add(schedule.generate());//pass parameter
     
     }
 }
