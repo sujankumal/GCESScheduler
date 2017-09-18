@@ -14,10 +14,10 @@ import java.util.List;
  */
 public class TeacherData {
      String name;
-     Boolean type;
+     String type;
      List<String> subjects;
      List<Integer> periods;
-     List<Boolean> labs;
+     List<String> labs;
 
     /**
      *
@@ -28,7 +28,7 @@ public class TeacherData {
      * @param labs
      */
     
-     TeacherData(String name, Boolean type, List<String> subjects, List<Integer> periods, List<Boolean> labs ){
+     TeacherData(String name, String type, List<String> subjects, List<Integer> periods, List<String> labs ){
         this.name = name;
         this.type = type;
         this.subjects = subjects;
@@ -40,11 +40,11 @@ public class TeacherData {
         return name;
     }
   
-     public Boolean getType() {
+     public String getType() {
         return type;
     }
      
-    public List<Boolean> getLabs() {
+    public List<String> getLabs() {
         return labs;
     }
 

@@ -29,7 +29,7 @@ import org.controlsfx.control.GridView;
  */
 public class MainScheduleTaskFrame {
     
-        SpreadsheetView spreadView;
+        static SpreadsheetView spreadView;
         GridView<Object> gridView;
         GridBase gridBase;
         GridPane gridPane = new GridPane();
@@ -100,7 +100,7 @@ public class MainScheduleTaskFrame {
         spreadView.setShowRowHeader(true);
         spreadView.setShowColumnHeader(true);
         spreadView.setEditable (true);
-            
+        
     }
     
     public void dataInitialize() throws SQLException{
@@ -109,7 +109,7 @@ public class MainScheduleTaskFrame {
         rs = pstmt.executeQuery();
         while (rs.next()) {
             String teacherName = "";
-            Boolean type = false;
+            String type = "";
             
             String subject1 = "";
             String subject2 = "";
@@ -119,20 +119,20 @@ public class MainScheduleTaskFrame {
             Integer period2 = 0;
             Integer period3 = 0;
             
-            Boolean lab1 = false;
-            Boolean lab2 = false;
-            Boolean lab3 = false;
+            String lab1 = "";
+            String lab2 = "";
+            String lab3 = "";
             
             List<String> subjects;
             List<Integer> periods;
-            List<Boolean> labs;
+            List<String> labs;
             
             subjects = new ArrayList<>();
             periods = new ArrayList<>();
             labs = new ArrayList<>();
             
             teacherName = rs.getString("NAME");
-            type = rs.getBoolean("FULLTIME");
+            type = rs.getString("FULLTIME");
             
             
             subject1 = rs.getString("FIRSTSUBJECT");
@@ -141,9 +141,9 @@ public class MainScheduleTaskFrame {
             period1 = rs.getInt("FIRSTPERIOD");
             period2 = rs.getInt("SECONDPERIOD");
             period3 = rs.getInt("THIRDPERIOD");
-            lab1 = rs.getBoolean("FIRSTSUBLAB");
-            lab2 = rs.getBoolean("SECONDSUBLAB");
-            lab3 = rs.getBoolean("THIRDSUBLAB");
+            lab1 = rs.getString("FIRSTSUBLAB");
+            lab2 = rs.getString("SECONDSUBLAB");
+            lab3 = rs.getString("THIRDSUBLAB");
             
             
             subjects.add(subject1);
@@ -167,18 +167,32 @@ public class MainScheduleTaskFrame {
           gridBase.setCellValue(5, 5, "hero");
           dataInitialize();
           System.out.println(teachers.size()); 
-          
-           //main scheduling here :D
-          
+          SubjectClassLink scl = new SubjectClassLink(); 
+          //on getting value with no subject returns null
+           
+        //main scheduling here :D
+          List<TeacherData> fullTimeTeacherList = new ArrayList<TeacherData>();
           for (Iterator<Object> iterator = teachers.iterator(); iterator.hasNext();) {
               TeacherData next = (TeacherData) iterator.next();
-              System.out.println(next.getName());
+          /*    System.out.println(next.getName());
               System.out.println(next.getType());
               System.out.println(next.getLabs().get(1));
               System.out.println(next.getPeriods().get(1));
               System.out.println(next.getSubjects().get(0));
-            }
+           */
           
+          //check for full and part time teacher and seperate full from part time giving part time priority
+            System.out.println("entere inside "+next.getType());
+          if(next.getType().toString().equals("true") ){
+              fullTimeTeacherList.add(next);
+              System.out.println("enter inside "+next.getType());
+          }
+                 
+              String s = next.getSubjects().get(0);
+              System.out.println("subject class "+scl.getAmap(next.getSubjects().get(0)));
+          
+          }
+           System.out.println("from full time wala list "+fullTimeTeacherList.get(0).getName());
 
             //between here
           stackPane.getChildren().add(spreadView);
