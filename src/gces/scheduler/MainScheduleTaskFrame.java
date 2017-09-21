@@ -43,6 +43,7 @@ public class MainScheduleTaskFrame {
         ResultSet rs =null;
         List<Object> teachers = new ArrayList<Object>();
         TeacherData td;
+        CellSchedulerLink csl = new CellSchedulerLink();
         //
     /**
      *
@@ -164,41 +165,68 @@ public class MainScheduleTaskFrame {
     }
     
     public SpreadsheetView generate() throws SQLException{
-          gridBase.setCellValue(5, 5, "hero");
-          dataInitialize();
-          System.out.println(teachers.size()); 
-          SubjectClassLink scl = new SubjectClassLink(); 
-          //on getting value with no subject returns null
-           
-        //main scheduling here :D
-          List<TeacherData> fullTimeTeacherList = new ArrayList<TeacherData>();
-          for (Iterator<Object> iterator = teachers.iterator(); iterator.hasNext();) {
-              TeacherData next = (TeacherData) iterator.next();
-          /*    System.out.println(next.getName());
-              System.out.println(next.getType());
-              System.out.println(next.getLabs().get(1));
-              System.out.println(next.getPeriods().get(1));
-              System.out.println(next.getSubjects().get(0));
-           */
-          
-          //check for full and part time teacher and seperate full from part time giving part time priority
-            System.out.println("entere inside "+next.getType());
-          if(next.getType().toString().equals("true") ){
-              fullTimeTeacherList.add(next);
-              System.out.println("enter inside "+next.getType());
-          }
-                 
-              String s = next.getSubjects().get(0);
-              System.out.println("subject class "+scl.getAmap(next.getSubjects().get(0)));
-          
-          }
-           System.out.println("from full time wala list "+fullTimeTeacherList.get(0).getName());
-
-            //between here
-          stackPane.getChildren().add(spreadView);
-          dh.disconnect();
-         return spreadView;
-    }  
+        List<TeacherData> fullTimeTeacherList = new ArrayList<TeacherData>();
+        List<TeacherData> partTimeTeacherList = new ArrayList<TeacherData>();
+        SubjectClassLink scl = new SubjectClassLink(); 
+        gridBase.setCellValue(4, 5, "hero");
+        dataInitialize();
+        //seperating part time and full time  
+        for (Iterator<Object> iterator = teachers.iterator(); iterator.hasNext();) {
+            TeacherData next = (TeacherData) iterator.next();
+            /*    System.out.println(next.getName());System.out.println(next.getType());System.out.println(next.getLabs().get(1));System.out.println(next.getPeriods().get(1));System.out.println(next.getSubjects().get(0));
+            */
+            if(next.getType().equals("true") ){
+                fullTimeTeacherList.add(next);
+            }else{
+                partTimeTeacherList.add(next);
+            }
+            System.out.println("subject class "+scl.getAmap(next.getSubjects().get(0)));
+        }
+        int controlX = 0,controlY = 0;
+        //cellX for sunday, y for monday, z for tuesday and [i][j] i for class j for period
+        String cellX[][] = new String[4][6];
+        String cellY[][] = new String[4][6];
+        String cellZ[][] = new String[4][6];
+        
+        int i=0,j=0, day=0;
+        scheduling(fullTimeTeacherList,partTimeTeacherList,
+                controlX, controlY,
+                cellX,cellY,cellZ,
+                i,j,day,
+                scl);
+       
+        stackPane.getChildren().add(spreadView);
+        dh.disconnect();
+       return spreadView;
+    }
+    
+//--------------------------------------------------------------------------------
+    void scheduling(List<TeacherData> fullTimeTeacherList, List<TeacherData> partTimeTeacherList,
+            int controlX, int controlY,
+            String[][] cellX, String[][] cellY, String[][] cellZ,
+            int i, int j,int day,
+            SubjectClassLink scl){
+        
+        if(i>=3&&j>=6){
+            return;
+        }
+       
+        
+        day = 1;
+        gridBase.setCellValue(csl.getRow(day, i+1, j+1), csl.getColumn(day, i+1, j+1), "i "+i+" j "+j);
+        System.out.println(cellX[0][0]+i+j);
+        //return;
+        if(!(i>=3)){
+         i++;
+        }
+        j++;
+        scheduling(fullTimeTeacherList,partTimeTeacherList,
+                controlX, controlY,
+                cellX,cellY,cellZ,
+                i,j,day,
+                scl);
+    }
+ //------------------------------------------------------------------------------------------   
 }
 
 //CP problem take variaable, domain, and constrain
