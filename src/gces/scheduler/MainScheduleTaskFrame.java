@@ -34,6 +34,10 @@ public class MainScheduleTaskFrame {
         GridBase gridBase;
         GridPane gridPane = new GridPane();
         List < ObservableList< SpreadsheetCell>> rows;
+        List<TeacherData> fullTimeTeacherList;
+        List<TeacherData> partTimeTeacherList;
+        Iterator<TeacherData> pTTiterator; //part time teacher iterator
+        Iterator<TeacherData> fTTiterator;//full time teacher iterator
         StackPane stackPane;
         DatabaseHandleSQLite dh = new DatabaseHandleSQLite();
         Connection conn = dh.connect();
@@ -165,8 +169,8 @@ public class MainScheduleTaskFrame {
     }
     
     public SpreadsheetView generate() throws SQLException{
-        List<TeacherData> fullTimeTeacherList = new ArrayList<TeacherData>();
-        List<TeacherData> partTimeTeacherList = new ArrayList<TeacherData>();
+            fullTimeTeacherList = new ArrayList<TeacherData>();
+            partTimeTeacherList = new ArrayList<TeacherData>();
         SubjectClassLink scl = new SubjectClassLink(); 
         gridBase.setCellValue(4, 5, "hero");
         dataInitialize();
@@ -189,8 +193,10 @@ public class MainScheduleTaskFrame {
         String cellZ[][] = new String[4][6];
         
         int i=0,j=0, day=0;
-        scheduling(fullTimeTeacherList,partTimeTeacherList,
-                controlX, controlY,
+        pTTiterator = partTimeTeacherList.iterator();
+        fTTiterator = fullTimeTeacherList.iterator();
+        
+        scheduling(controlX, controlY,
                 cellX,cellY,cellZ,
                 i,j,day,
                 scl);
@@ -201,30 +207,44 @@ public class MainScheduleTaskFrame {
     }
     
 //--------------------------------------------------------------------------------
-    void scheduling(List<TeacherData> fullTimeTeacherList, List<TeacherData> partTimeTeacherList,
-            int controlX, int controlY,
+    int hello = 0;
+   void scheduling(int controlX, int controlY,
             String[][] cellX, String[][] cellY, String[][] cellZ,
             int i, int j,int day,
             SubjectClassLink scl){
+        //check if place is full
+        //if(i>=3&&j>=6){
+        //    return;
+        //}
+        //check if teachers list empty
+        hello++;
         
-        if(i>=3&&j>=6){
+        if (pTTiterator.hasNext()==false && fTTiterator.hasNext()==false) {
             return;
         }
+        System.out.println("Counting: "+ hello + " i: "+ i+ " j : "+j);
        
-        
         day = 1;
+        for (; pTTiterator.hasNext(); ) {
+            TeacherData next = pTTiterator.next();
+            System.out.println("p teacher name : " + next.name);
+              scheduling(controlX, controlY,cellX,cellY,cellZ,i,j,day,scl);
+        }
+        for (; fTTiterator.hasNext(); ) {
+            TeacherData next = fTTiterator.next();
+             System.out.println("f teacher name : " + next.name);
+           
+              scheduling(controlX, controlY,cellX,cellY,cellZ,i,j,day,scl); 
+        }
         gridBase.setCellValue(csl.getRow(day, i+1, j+1), csl.getColumn(day, i+1, j+1), "i "+i+" j "+j);
         System.out.println(cellX[0][0]+i+j);
         //return;
-        if(!(i>=3)){
-         i++;
-        }
-        j++;
-        scheduling(fullTimeTeacherList,partTimeTeacherList,
-                controlX, controlY,
-                cellX,cellY,cellZ,
-                i,j,day,
-                scl);
+       // if(!(i>=3)){
+       //  i++;
+       // }
+       // j++;
+       
+       // scheduling(fullTimeTeacherList,partTimeTeacherList,controlX, controlY,cellX,cellY,cellZ,i,j,day,scl);
     }
  //------------------------------------------------------------------------------------------   
 }
