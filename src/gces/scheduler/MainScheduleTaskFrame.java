@@ -48,7 +48,8 @@ public class MainScheduleTaskFrame {
         List<Object> teachers = new ArrayList<Object>();
         TeacherData td;
         CellSchedulerLink csl = new CellSchedulerLink();
-        //
+        List<Integer> teacherClassReserved = new ArrayList<Integer>();
+//
     /**
      *
      * @param stackPane
@@ -167,12 +168,12 @@ public class MainScheduleTaskFrame {
             teachers.add(td);
         }
     }
-    
+    int teacherNo=0;
     public SpreadsheetView generate() throws SQLException{
             fullTimeTeacherList = new ArrayList<TeacherData>();
             partTimeTeacherList = new ArrayList<TeacherData>();
         SubjectClassLink scl = new SubjectClassLink(); 
-        gridBase.setCellValue(4, 5, "hero");
+       
         dataInitialize();
         //seperating part time and full time  
         for (Iterator<Object> iterator = teachers.iterator(); iterator.hasNext();) {
@@ -192,7 +193,11 @@ public class MainScheduleTaskFrame {
         String cellY[][] = new String[4][6];
         String cellZ[][] = new String[4][6];
         
-        int i=0,j=0, day=0;
+        int i=0,j=0, day=1;
+        teacherNo = fullTimeTeacherList.size();
+        teacherNo = teacherNo + partTimeTeacherList.size();
+        
+        System.out.println("teacher number: "+ teacherNo);
         pTTiterator = partTimeTeacherList.iterator();
         fTTiterator = fullTimeTeacherList.iterator();
         
@@ -200,7 +205,7 @@ public class MainScheduleTaskFrame {
                 cellX,cellY,cellZ,
                 i,j,day,
                 scl);
-       
+        
         stackPane.getChildren().add(spreadView);
         dh.disconnect();
        return spreadView;
@@ -208,15 +213,14 @@ public class MainScheduleTaskFrame {
     
 //--------------------------------------------------------------------------------
     int hello = 0;
+    void checkPeriodOfTeacherReserved(int i,int j){
+        
+    };
    void scheduling(int controlX, int controlY,
             String[][] cellX, String[][] cellY, String[][] cellZ,
             int i, int j,int day,
             SubjectClassLink scl){
-        //check if place is full
-        //if(i>=3&&j>=6){
-        //    return;
-        //}
-        //check if teachers list empty
+        
         hello++;
         
         if (pTTiterator.hasNext()==false && fTTiterator.hasNext()==false) {
@@ -224,29 +228,133 @@ public class MainScheduleTaskFrame {
         }
         System.out.println("Counting: "+ hello + " i: "+ i+ " j : "+j);
        
-        day = 1;
+        // controlX= row and controlY = column
         for (; pTTiterator.hasNext(); ) {
             TeacherData next = pTTiterator.next();
             System.out.println("p teacher name : " + next.name);
-              scheduling(controlX, controlY,cellX,cellY,cellZ,i,j,day,scl);
+            
+            for(int xyz = 0; xyz<3;xyz++){
+                System.out.println("check "+next.subjects.get(xyz));
+                if("".equals(next.subjects.get(xyz))){
+                    continue;
+                }
+                i=scl.getAmap(next.subjects.get(xyz));
+                for(int xy=0; xy<3;xy++){
+                    if(next.periods.get(xy).equals(0)){
+                        System.out.println("hero");
+                        continue;
+                    }
+                    j=next.periods.get(xy);
+                    controlX=csl.getRow(day, i,j );
+                    controlY=csl.getColumn(day, i,j);
+                    if(!gridBase.getRows().get(controlX).get(controlY).getItem().equals("")){
+                        System.out.println("cell value get :"+gridBase.getRows().get(controlX).get(controlY).getItem());
+                        continue;
+                    }
+                    //check if teacher period reserved
+                        if (teacherClassReserved.equals(null)) {
+                            //do nothing
+                        }else{
+                            //here check for period
+                            int aa;
+                            if (controlX<6) {
+                                aa=controlX%7;
+                            } else{
+                                aa=(controlX%7)+1;
+                            }
+                            if (teacherClassReserved.contains(aa)) {
+                                continue;
+                            }
+                        }
+                     ////////
+                    if(next.labs.get(xyz).equals("true")){
+                        if (controlX<6) {
+                                 teacherClassReserved.add(controlX%7);
+                        }else{
+                                 teacherClassReserved.add((controlX%7)+1);
+                        }
+                        for(int ite = 0;ite<6;ite++){
+                            gridBase.setCellValue(controlX,controlY+ite,next.subjects.get(xyz));
+                            gridBase.setCellValue(controlX+1,controlY+ite,next.subjects.get(xyz));
+                        }
+                        break;
+                    }
+                    for(int ite = 0;ite<6;ite++){
+                        if (controlX<6) {
+                                 teacherClassReserved.add(controlX%7);
+                        }else{
+                                 teacherClassReserved.add((controlX%7)+1);
+                        }
+                        gridBase.setCellValue(controlX,controlY+ite,next.subjects.get(xyz));
+                    }
+                    break;
+                }
+            }
+          
+          scheduling(controlX, controlY,cellX,cellY,cellZ,i,j,day,scl);
         }
+        
         for (; fTTiterator.hasNext(); ) {
             TeacherData next = fTTiterator.next();
              System.out.println("f teacher name : " + next.name);
            
+             for(int xyz = 0; xyz<3;xyz++){
+                System.out.println("check "+next.subjects.get(xyz));
+                if("".equals(next.subjects.get(xyz))){
+                    continue;
+                }
+                i=scl.getAmap(next.subjects.get(xyz));
+                
+                    for(int j1 =1; j1<7;j1++){
+                        controlX=csl.getRow(day, i,j1 );
+                        controlY=csl.getColumn(day, i,j1);
+                        if(!gridBase.getRows().get(controlX).get(controlY).getItem().equals("")){
+                            System.out.println("cell value get :"+gridBase.getRows().get(controlX).get(controlY).getItem());
+                            continue;
+                        } 
+
+                //check if teacher period reserved
+                        if (teacherClassReserved.equals(null)) {
+                            //do nothing
+                        }else{
+                            //here check for period
+                            int aa;
+                            if (controlX<6) {
+                                aa=controlX%7;
+                            } else{
+                                aa=(controlX%7)+1;
+                            }
+                            if (teacherClassReserved.contains(aa)) {
+                                continue;
+                            }
+                        }
+                     ////////
+                        if(next.labs.get(xyz).equals("true")){
+                            if (controlX<6) {
+                                 teacherClassReserved.add(controlX%7);
+                            }else{
+                                 teacherClassReserved.add((controlX%7)+1);
+                            }
+                            for(int ite = 0;ite<6;ite++){
+                                gridBase.setCellValue(controlX,controlY+ite,next.subjects.get(xyz));
+                                gridBase.setCellValue(controlX+1,controlY+ite,next.subjects.get(xyz));
+                                }
+                            break;
+                        }
+                        for(int ite = 0;ite<6;ite++){
+                            if (controlX<6) {
+                                 teacherClassReserved.add(controlX%7);
+                            }else{
+                                 teacherClassReserved.add((controlX%7)+1);
+                            }
+                            gridBase.setCellValue(controlX,controlY+ite,next.subjects.get(xyz));
+                            }
+                        break;
+                    }
+            }
               scheduling(controlX, controlY,cellX,cellY,cellZ,i,j,day,scl); 
         }
-        gridBase.setCellValue(csl.getRow(day, i+1, j+1), csl.getColumn(day, i+1, j+1), "i "+i+" j "+j);
-        System.out.println(cellX[0][0]+i+j);
-        //return;
-       // if(!(i>=3)){
-       //  i++;
-       // }
-       // j++;
-       
-       // scheduling(fullTimeTeacherList,partTimeTeacherList,controlX, controlY,cellX,cellY,cellZ,i,j,day,scl);
     }
  //------------------------------------------------------------------------------------------   
+   
 }
-
-//CP problem take variaable, domain, and constrain
